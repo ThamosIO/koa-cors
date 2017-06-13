@@ -1,44 +1,44 @@
-var koa        = require('koa');
-var http       = require('http');
-var chai       = require('chai');
-var cors       = require('../');
-var superagent = require('superagent');
+const koa = require('koa');
+const http = require('http');
+const chai = require('chai');
+const cors = require('../');
+const superagent = require('superagent');
 
-var app, server;
+var server;
 
-describe('cors()', function() {
+describe('cors()', () => {
 
-  beforeEach(function() {
+  beforeEach(() => {
     setupServer();
   });
 
-  it('should set "Access-Control-Allow-Origin" to "*"', function(done) {
+  it('should set "Access-Control-Allow-Origin" to "*"', done => {
     superagent.get('http://localhost:3000')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Allow-Origin')).to.equal('*');
 
         done();
       });
   });
 
-  it('should set "Access-Control-Allow-Origin" to "example.org"', function(done) {
+  it('should set "Access-Control-Allow-Origin" to "example.org"', done => {
     superagent.get('http://localhost:3000')
       .set('Origin', 'example.org')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Allow-Origin')).to.equal('example.org');
 
         done();
       });
   });
 
-  it('should update "Access-Control-Allow-Origin" for each request', function(done) {
+  it('should update "Access-Control-Allow-Origin" for each request', done => {
     superagent.get('http://localhost:3000')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Allow-Origin')).to.equal('*');
 
         superagent.get('http://localhost:3000')
           .set('Origin', 'localhost')
-          .end(function(response) {
+          .end(response => {
             chai.expect(response.get('Access-Control-Allow-Origin')).to.equal('localhost');
 
             done();
@@ -46,69 +46,69 @@ describe('cors()', function() {
       });
   });
 
-  it('should not set "Access-Control-Expose-Headers"', function(done) {
+  it('should not set "Access-Control-Expose-Headers"', done => {
     superagent.get('http://localhost:3000')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Expose-Headers')).to.not.exist;
 
         done();
       });
   });
 
-  it('should not set "Access-Control-Allow-Max-Age"', function(done) {
+  it('should not set "Access-Control-Allow-Max-Age"', done => {
     superagent.get('http://localhost:3000')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Allow-Max-Age')).to.not.exist;
 
         done();
       });
   });
 
-  it('should not set "Access-Control-Allow-Methods"', function(done) {
+  it('should not set "Access-Control-Allow-Methods"', done => {
     superagent.get('http://localhost:3000')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Allow-Methods')).to.equal('GET,HEAD,PUT,POST,DELETE');
 
         done();
       });
   });
 
-  it('should not set "Access-Control-Allow-Credentials"', function(done) {
+  it('should not set "Access-Control-Allow-Credentials"', done => {
     superagent.get('http://localhost:3000')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Allow-Credentials')).to.not.exist;
 
         done();
       });
   });
 
-  it('should set "Access-Control-Allow-Headers" to "Accept"', function(done) {
+  it('should set "Access-Control-Allow-Headers" to "Accept"', done => {
     superagent.get('http://localhost:3000')
       .set('Access-Control-Request-Headers', 'Accept')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Allow-Headers')).to.equal('Accept');
 
         done();
       });
   });
 
-  it('should set "Access-Control-Allow-Headers" to "X-Foo"', function(done) {
+  it('should set "Access-Control-Allow-Headers" to "X-Foo"', done => {
     superagent.get('http://localhost:3000')
       .set('Access-Control-Request-Headers', 'X-Foo')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Allow-Headers')).to.equal('X-Foo');
 
         done();
       });
   });
 
-  it('should not fix value of "Access-Control-Allow-Headers"', function(done) {
+  it('should not fix value of "Access-Control-Allow-Headers"', done => {
     superagent.get('http://localhost:3000')
       .set('Access-Control-Request-Headers', 'X-Foo')
-      .end(function() {
+      .end(() => {
         superagent.get('http://localhost:3000')
           .set('Access-Control-Request-Headers', 'X-Bar')
-          .end(function(response) {
+          .end(response => {
             chai.expect(response.get('Access-Control-Allow-Headers')).to.equal('X-Bar');
 
             done();
@@ -118,25 +118,25 @@ describe('cors()', function() {
 
 });
 
-describe('cors({ origin: true })', function() {
+describe('cors({ origin: true })', () => {
 
-  beforeEach(function() {
+  beforeEach(() => {
     setupServer({ origin: true });
   });
 
-  it('should set "Access-Control-Allow-Origin" to "*"', function(done) {
+  it('should set "Access-Control-Allow-Origin" to "*"', done => {
     superagent.get('http://localhost:3000')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Allow-Origin')).to.equal('*');
 
         done();
       });
   });
 
-  it('should set "Access-Control-Allow-Origin" to "example.org"', function(done) {
+  it('should set "Access-Control-Allow-Origin" to "example.org"', done => {
     superagent.get('http://localhost:3000')
       .set('Origin', 'example.org')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Allow-Origin')).to.equal('example.org');
 
         done();
@@ -145,15 +145,15 @@ describe('cors({ origin: true })', function() {
 
 });
 
-describe('cors({ origin: false })', function() {
+describe('cors({ origin: false })', () => {
 
-  beforeEach(function() {
+  beforeEach(() => {
     setupServer({ origin: false });
   });
 
-  it('should not set any "Access-Control-Allow-*" header', function(done) {
+  it('should not set any "Access-Control-Allow-*" header', done => {
     superagent.get('http://localhost:3000')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Allow-Origin')).to.not.exist;
         chai.expect(response.get('Access-Control-Allow-Methods')).to.not.exist;
 
@@ -163,9 +163,9 @@ describe('cors({ origin: false })', function() {
 
 });
 
-describe('cors({ origin: [function]})', function() {
+describe('cors({ origin: [function]})', () => {
 
-  beforeEach(function() {
+  beforeEach(() => {
     var originWhiteList = ["localhost", "otherhost.com"];
 
     var originFunction = function(req) {
@@ -179,10 +179,11 @@ describe('cors({ origin: [function]})', function() {
     setupServer({ origin: originFunction });
   });
 
-  it('should not set any "Access-Control-Allow-*" header', function(done) {
+  it('should not set any "Access-Control-Allow-*" header', done => {
     superagent.get('http://localhost:3000')
     .set('Origin', 'example.com')
-      .end(function(response) {
+      .end(response => {
+        console.log(response);
         chai.expect(response.get('Access-Control-Allow-Origin')).to.not.exist;
         chai.expect(response.get('Access-Control-Allow-Methods')).to.not.exist;
         chai.expect(response.statusCode).to.equal(200);
@@ -190,20 +191,20 @@ describe('cors({ origin: [function]})', function() {
       });
   });
 
-  it('should set "Access-Control-Allow-Origin" to "otherhost.com"', function(done) {
+  it('should set "Access-Control-Allow-Origin" to "otherhost.com"', done => {
     superagent.get('http://localhost:3000')
     .set('Origin', 'otherhost.com')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Allow-Origin')).to.equal('otherhost.com');
 
         done();
       });
   });
 
-  it('should set "Access-Control-Allow-Origin" to "localhost"', function(done) {
+  it('should set "Access-Control-Allow-Origin" to "localhost"', done => {
     superagent.get('http://localhost:3000')
     .set('Origin', 'localhost')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Allow-Origin')).to.equal('localhost');
 
         done();
@@ -212,15 +213,15 @@ describe('cors({ origin: [function]})', function() {
 
 });
 
-describe('cors({ expose: "Acccept,Authorization" })', function() {
+describe('cors({ expose: "Acccept,Authorization" })', () => {
 
-  beforeEach(function() {
+  beforeEach(() => {
     setupServer({ expose: 'Accept,Authorization' });
   });
 
-  it('should set "Access-Control-Expose-Headers" header', function(done) {
+  it('should set "Access-Control-Expose-Headers" header', done => {
     superagent.get('http://localhost:3000')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Expose-Headers'))
           .to.equal('Accept,Authorization');
 
@@ -230,15 +231,15 @@ describe('cors({ expose: "Acccept,Authorization" })', function() {
 
 });
 
-describe('cors({ expose: ["Acccept", "Authorization"] })', function() {
+describe('cors({ expose: ["Accept", "Authorization"] })', () => {
 
-  beforeEach(function() {
+  beforeEach(() => {
     setupServer({ expose: ['Accept', 'Authorization'] });
   });
 
-  it('should set "Access-Control-Expose-Headers" header', function(done) {
+  it('should set "Access-Control-Expose-Headers" header', done => {
     superagent.get('http://localhost:3000')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Expose-Headers'))
           .to.equal('Accept,Authorization');
 
@@ -248,15 +249,15 @@ describe('cors({ expose: ["Acccept", "Authorization"] })', function() {
 
 });
 
-describe('cors({ maxAge: 60 * 24 })', function() {
+describe('cors({ maxAge: 60 * 24 })', () => {
 
-  beforeEach(function() {
+  beforeEach(() => {
     setupServer({ maxAge: 60 * 24 });
   });
 
-  it('should set "Access-Control-Max-Age" header', function(done) {
+  it('should set "Access-Control-Max-Age" header', done => {
     superagent.get('http://localhost:3000')
-      .end(function(response) {
+      .end(response => {
         chai.expect(response.get('Access-Control-Max-Age')).to.equal('1440');
 
         done();
@@ -265,18 +266,16 @@ describe('cors({ maxAge: 60 * 24 })', function() {
 
 });
 
-afterEach(function() {
+afterEach(() => {
   server.close();
 });
 
 function setupServer(options) {
-  app = koa();
+  const app = new koa();
 
   app.use(cors(options));
 
-  app.use(function *(next) {
-    this.body = 'Hello';
-  });
+  app.use(async (ctx, next) => ctx.body = 'Hello');
 
   server = http.createServer(app.callback()).listen(3000);
 }

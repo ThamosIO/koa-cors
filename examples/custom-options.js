@@ -3,19 +3,20 @@
  *
  */
 
-var koa = require('koa');
-var route = require('koa-route');
-var cors = require('koa-cors');
-var app = koa();
+const koa = require('koa');
+const route = require('koa-route');
+const cors = require('koa-cors');
 
-var options = {
+const app = new koa();
+
+const options = {
 	origin: '*'
 };
 
 app.use(cors(options));
 
-app.use(route.get('/', function() {
-  this.body = { msg: 'Hello World!' };
+app.use(route.get('/', ctx => {
+  ctx.body = { msg: 'Hello World!' };
 }));
 
 app.listen(3000);
