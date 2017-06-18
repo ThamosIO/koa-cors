@@ -62,7 +62,7 @@ module.exports = function getMiddleware(options) {
     }
 
     if (origin === false) {
-       await next;
+       await next();
        return ;
     }
 
@@ -115,7 +115,7 @@ module.exports = function getMiddleware(options) {
     if (ctx.method === 'OPTIONS') {
       ctx.status = 204;
     } else {
-      await next;
+      await next();
     }
   };
 };
